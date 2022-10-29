@@ -21,7 +21,7 @@ def getpixels(imagepath, screensize, center=False, fill=False):
         offset = (0, 0)
     else:
         if center:
-            offset = (int(((screensize[0] / 2) - canvas[0])), int(((screensize[1]) / 2) - canvas[1]))
+            offset = ((screensize[0] - image.size[0]/2) // 2, (screensize[1] - image.size[1]/2) // 2)
         else:
             offset = (random.randint(0, screensize[0] - canvas[0]), random.randint(0, screensize[1] - canvas[1]))
             # offset = (200, 150)
