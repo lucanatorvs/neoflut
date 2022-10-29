@@ -10,19 +10,18 @@ import os
 import configparser
 
 # get a image and convert it to a random list of pixels
-def getpixels(imagepath, screensize, center=False, fill=False):
+def getpixels(imagepath, screensize, center=False, fill=False, canvas=(100,100)):
     image = Image.open(imagepath)
     # check if it is a image
     if image.format == None:
         print('not a image')
         return
-    canvas = (200, 200)
     if fill:
         canvas = screensize
         offset = (0, 0)
     else:
         if center:
-            offset = ((screensize[0] - image.size[0]/2) // 2, (screensize[1] - image.size[1]/2) // 2)
+            offset = ((screensize[0]/2 - canvas[0]/2), (screensize[1]/2 - canvas[1]/2))
         else:
             offset = (random.randint(0, screensize[0] - canvas[0]), random.randint(0, screensize[1] - canvas[1]))
             # offset = (200, 150)
@@ -43,7 +42,7 @@ def strings(pixels):
     # make a list of strings to send
     lines = []
     for pixel in pixels:
-        line = "PX %s %s %s%s%sff\n" % (pixel[0], pixel[1], '%0*x' % (2,pixel[2]), '%0*x' % (2,pixel[3]), '%0*x' % (2,pixel[4]))
+        line = "PX %s %s %s%s%s\n" % (pixel[0], pixel[1], '%0*x' % (2,pixel[2]), '%0*x' % (2,pixel[3]), '%0*x' % (2,pixel[4]))
         lines.append(line)
     return lines
 
@@ -81,11 +80,14 @@ def main():
     multicon = int(config['threads'])
     screenx = int(config['screenX'])
     screeny = int(config['screenY'])
+    drawX = int(config['drawX'])
+    drawY = int(config['drawY'])
     centering = int(config['center'])
     fill = int(config['fill'])
     screensize = (screenx, screeny)
     # get pixels from image
-    pixels = getpixels(imagepath, screensize, centering, fill)
+    drawsize = (drawX, drawY)
+    pixels = getpixels(imagepath, screensize, centering, fill, drawsize)
     # make a list of strings to send
     lines = strings(pixels)
 
