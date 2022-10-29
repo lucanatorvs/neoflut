@@ -7,6 +7,7 @@ import random
 # import threading
 from multiprocessing import Process
 import os
+import configparser
 
 # get a image and convert it to a random list of pixels
 def getpixels(imagepath, screensize, center=False, fill=False):
@@ -70,16 +71,18 @@ def send_thread(lines, server_address, port):
 # main function
 def main():
     # get image and server address from config file
-    config = open('config.txt', 'r')
-    imagepath = config.readline().strip()
-    server_address = config.readline().strip()
-    port = int(config.readline().strip())
-    multicon = int(config.readline().strip())
-    screenx = int(config.readline().strip())
-    screeny = int(config.readline().strip())
-    centering = int(config.readline().strip())
-    fill = int(config.readline().strip())
-    config.close()
+    configReader = configparser.ConfigParser()
+    configReader.read('config.ini')
+    config = configReader['Neoflut']
+
+    imagepath = config['image']
+    server_address = config['address']
+    port = int(config['port'])
+    multicon = int(config['threads'])
+    screenx = int(config['screenX'])
+    screeny = int(config['screenY'])
+    centering = int(config['center'])
+    fill = int(config['fill'])
     screensize = (screenx, screeny)
     # get pixels from image
     pixels = getpixels(imagepath, screensize, centering, fill)
